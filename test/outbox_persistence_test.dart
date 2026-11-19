@@ -7,12 +7,13 @@ import 'package:employee_workspace_offline_capable/src/core/db/app_database.dart
 import 'package:employee_workspace_offline_capable/src/core/dio_api_service/api_service.dart';
 import 'package:employee_workspace_offline_capable/src/core/location/location_service.dart';
 import 'package:employee_workspace_offline_capable/src/core/network/connectivity_service.dart';
-import 'package:employee_workspace_offline_capable/src/feature/data/local/cache_store.dart';
-import 'package:employee_workspace_offline_capable/src/feature/data/local/outbox_store.dart';
-import 'package:employee_workspace_offline_capable/src/feature/data/remote/hrms_api.dart';
-import 'package:employee_workspace_offline_capable/src/feature/domain/models/attendance.dart';
-import 'package:employee_workspace_offline_capable/src/feature/domain/services/attendance_service.dart';
-import 'package:employee_workspace_offline_capable/src/feature/domain/services/sync_engine.dart';
+import 'package:employee_workspace_offline_capable/src/core/sync/sync_engine.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/data/datasources/attendance_remote_datasource.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/data/datasources/outbox_store.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/data/repositories/attendance_repository_impl.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/domain/models/attendance.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/domain/usecases/attendance_service.dart';
+import 'package:employee_workspace_offline_capable/src/feature/dashboard/data/datasources/cache_store.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -104,16 +105,19 @@ void main() {
       factory: databaseFactoryFfi,
     );
     final adapter1 = _OrderedRecordingAdapter();
+    final outbox1 = OutboxStore(db1);
     final service1 = AttendanceService(
       clock: clock,
       locationService: ConfigurableLocationService(
         modeProvider: () => LocationSimulationMode.insideOffice,
       ),
-      cache: CacheStore(db1),
-      outbox: OutboxStore(db1),
-      syncEngine: SyncEngine(
-        outbox: OutboxStore(db1),
-        api: HrmsApi(
+      repository: AttendanceRepositoryImpl(
+        cache: CacheStore(db1),
+        outbox: outbox1,
+      ),
+      syncEngine: SyncEngine<AttendanceEvent>(
+        outbox: outbox1,
+        transport: AttendanceRemoteDataSource(
           DioApiService(
             dio: Dio(BaseOptions(baseUrl: 'http://localhost:8080'))
               ..httpClientAdapter = adapter1,
@@ -139,9 +143,9 @@ void main() {
     expect(await outbox2.pendingCount(), 2);
 
     final adapter2 = _OrderedRecordingAdapter();
-    final sync2 = SyncEngine(
+    final sync2 = SyncEngine<AttendanceEvent>(
       outbox: outbox2,
-      api: HrmsApi(
+      transport: AttendanceRemoteDataSource(
         DioApiService(
           dio: Dio(BaseOptions(baseUrl: 'http://localhost:8080'))
             ..httpClientAdapter = adapter2,
@@ -181,9 +185,9 @@ void main() {
     );
 
     final adapter = _OrderedRecordingAdapter(statusToReturn: 409);
-    final sync = SyncEngine(
+    final sync = SyncEngine<AttendanceEvent>(
       outbox: outbox,
-      api: HrmsApi(
+      transport: AttendanceRemoteDataSource(
         DioApiService(
           dio: Dio(BaseOptions(baseUrl: 'http://localhost:8080'))
             ..httpClientAdapter = adapter,

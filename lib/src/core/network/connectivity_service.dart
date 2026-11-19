@@ -11,16 +11,15 @@ abstract interface class ConnectivityService {
 
 class AppConnectivityService implements ConnectivityService {
   AppConnectivityService({
-    required bool Function() isSimulatedOffline,
+    required this.isSimulatedOffline,
     Connectivity? connectivity,
-  })  : _isSimulatedOffline = isSimulatedOffline,
-        _connectivity = connectivity ?? Connectivity() {
+  }) : _connectivity = connectivity ?? Connectivity() {
     _subscription = _connectivity.onConnectivityChanged.listen((results) {
-      _emit(_hasNetwork(results) && !_isSimulatedOffline());
+      _emit(_hasNetwork(results) && !isSimulatedOffline());
     });
   }
 
-  final bool Function() _isSimulatedOffline;
+  final bool Function() isSimulatedOffline;
   final Connectivity _connectivity;
   final _controller = StreamController<bool>.broadcast();
   StreamSubscription<List<ConnectivityResult>>? _subscription;
@@ -42,7 +41,7 @@ class AppConnectivityService implements ConnectivityService {
 
   @override
   Future<bool> isOnline() async {
-    if (_isSimulatedOffline()) return false;
+    if (isSimulatedOffline()) return false;
     try {
       final results = await _connectivity.checkConnectivity();
       return _hasNetwork(results);

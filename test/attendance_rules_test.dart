@@ -1,5 +1,5 @@
-import 'package:employee_workspace_offline_capable/src/feature/domain/models/attendance.dart';
-import 'package:employee_workspace_offline_capable/src/feature/domain/rules/attendance_rules.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/domain/models/attendance.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/domain/rules/attendance_rules.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

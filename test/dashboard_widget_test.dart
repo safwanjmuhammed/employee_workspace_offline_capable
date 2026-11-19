@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:employee_workspace_offline_capable/src/app.dart';
 import 'package:employee_workspace_offline_capable/src/core/clock/company_clock.dart';
-import 'package:employee_workspace_offline_capable/src/feature/data/repositories/workspace_repository.dart';
-import 'package:employee_workspace_offline_capable/src/feature/domain/models/attendance.dart';
-import 'package:employee_workspace_offline_capable/src/feature/domain/models/employee.dart';
-import 'package:employee_workspace_offline_capable/src/feature/presentation/providers/app_providers.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/domain/models/attendance.dart';
+import 'package:employee_workspace_offline_capable/src/feature/dashboard/domain/models/dashboard_snapshot.dart';
+import 'package:employee_workspace_offline_capable/src/feature/dashboard/domain/models/employee.dart';
+import 'package:employee_workspace_offline_capable/src/feature/dashboard/presentation/providers/workspace_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

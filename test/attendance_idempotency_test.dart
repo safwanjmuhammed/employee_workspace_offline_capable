@@ -7,12 +7,13 @@ import 'package:employee_workspace_offline_capable/src/core/db/app_database.dart
 import 'package:employee_workspace_offline_capable/src/core/dio_api_service/api_service.dart';
 import 'package:employee_workspace_offline_capable/src/core/location/location_service.dart';
 import 'package:employee_workspace_offline_capable/src/core/network/connectivity_service.dart';
-import 'package:employee_workspace_offline_capable/src/feature/data/local/cache_store.dart';
-import 'package:employee_workspace_offline_capable/src/feature/data/local/outbox_store.dart';
-import 'package:employee_workspace_offline_capable/src/feature/data/remote/hrms_api.dart';
-import 'package:employee_workspace_offline_capable/src/feature/domain/models/attendance.dart';
-import 'package:employee_workspace_offline_capable/src/feature/domain/services/attendance_service.dart';
-import 'package:employee_workspace_offline_capable/src/feature/domain/services/sync_engine.dart';
+import 'package:employee_workspace_offline_capable/src/core/sync/sync_engine.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/data/datasources/attendance_remote_datasource.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/data/datasources/outbox_store.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/data/repositories/attendance_repository_impl.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/domain/models/attendance.dart';
+import 'package:employee_workspace_offline_capable/src/feature/attendance/domain/usecases/attendance_service.dart';
+import 'package:employee_workspace_offline_capable/src/feature/dashboard/data/datasources/cache_store.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -104,10 +105,10 @@ void main() {
     );
     final cache = CacheStore(db);
     final outbox = OutboxStore(db);
-    final api = HrmsApi(DioApiService(dio: dio));
-    final syncEngine = SyncEngine(
+    final transport = AttendanceRemoteDataSource(DioApiService(dio: dio));
+    final syncEngine = SyncEngine<AttendanceEvent>(
       outbox: outbox,
-      api: api,
+      transport: transport,
       connectivity: connectivity,
     );
     final attendance = AttendanceService(
@@ -115,8 +116,7 @@ void main() {
       locationService: ConfigurableLocationService(
         modeProvider: () => LocationSimulationMode.insideOffice,
       ),
-      cache: cache,
-      outbox: outbox,
+      repository: AttendanceRepositoryImpl(cache: cache, outbox: outbox),
       syncEngine: syncEngine,
     );
 

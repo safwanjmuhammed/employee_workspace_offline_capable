@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'feature/presentation/home_shell.dart';
+import 'feature/dashboard/presentation/screens/home_shell.dart';
 
 class EmployeeWorkspaceApp extends StatelessWidget {
   const EmployeeWorkspaceApp({super.key});

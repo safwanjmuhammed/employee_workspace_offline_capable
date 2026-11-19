@@ -30,8 +30,7 @@ class AppDatabase {
   }
 
   static Future<void> _onCreate(Database db, int version) async {
-    // Key-value JSON cache for employee profile, attendance history,
-    // leave balance, and leave requests.
+    // Key-value JSON cache for employee profile and attendance history.
     await db.execute('''
       CREATE TABLE cache_kv (
         key TEXT PRIMARY KEY,

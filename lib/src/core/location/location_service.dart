@@ -64,17 +64,17 @@ abstract interface class LocationService {
 /// Switches between real [Geolocator] and configurable simulated modes.
 class ConfigurableLocationService implements LocationService {
   ConfigurableLocationService({
-    required LocationSimulationMode Function() modeProvider,
-  }) : _modeProvider = modeProvider;
+    required this.modeProvider,
+  });
 
-  final LocationSimulationMode Function() _modeProvider;
+  final LocationSimulationMode Function() modeProvider;
 
   @override
   Future<LocationResult> getCurrentLocation({
     required double officeLat,
     required double officeLng,
   }) async {
-    switch (_modeProvider()) {
+    switch (modeProvider()) {
       case LocationSimulationMode.insideOffice:
         // ~25 m north-east of the configured office coordinates.
         return LocationSuccess(

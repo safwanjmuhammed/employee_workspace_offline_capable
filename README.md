@@ -20,22 +20,22 @@ lib/
       dio_api_service/               # Dio client, IApiService, interceptor, ApiException
       location/                      # Haversine distance + real/simulated LocationService
       network/                       # connectivity_plus + simulated offline toggle
+      sync/                          # SyncEngine (pure core abstractions, zero feature imports)
+    common/
+      atom/                          # StatusChip
+      molecule/                      # SyncStatusBar
+      organism/                      # Reserved for shared organisms
     feature/
-      domain/
-        models/                      # Employee, OfficeConfig, AttendanceEvent/Record, Leave*
-        rules/                       # Pure AttendanceRules & LeaveValidator
-        services/                    # AttendanceService, SyncEngine, LeaveService
-      data/
-        local/                       # CacheStore (JSON cache) & OutboxStore (ordered queue)
-        remote/                      # HrmsApi (REST DTO mapping)
-        repositories/                # WorkspaceRepository (stale-while-revalidate + merge)
-      presentation/
-        providers/                   # Riverpod providers & WorkspaceController
-        dashboard/                   # DashboardScreen
-        attendance/                  # AttendanceHistoryScreen + Sync Outbox tab
-        leave/                       # LeaveScreen + LeaveApplyScreen
-        dev/                         # DevPanelSheet (location, offline, scenario, URL)
-        widgets/                     # SyncStatusBar, StatusChip
+      attendance/
+        domain/                      # AttendanceEvent/Record, AttendanceRepository, AttendanceRules, AttendanceService (use case)
+        data/                        # OutboxStore, AttendanceRemoteDataSource, AttendanceRepositoryImpl
+        presentation/                # AttendanceHistoryScreen + Sync Outbox tab
+      dashboard/
+        domain/                      # Employee, OfficeConfig, WorkspaceSnapshot, DashboardRepository
+        data/                        # CacheStore, DashboardRemoteDataSource, DashboardRepositoryImpl
+        presentation/                # WorkspaceProviders, DashboardScreen, HomeShell
+      simulation/
+        presentation/                # DevPanelSheet (location, offline, scenario, URL)
 ```
 
 ### State Management Justification
@@ -153,5 +153,7 @@ Tap the **tune icon** (top-right of the AppBar) to open **Simulation & Testing C
 - **Single employee & no login:** Per scope.
 - **No background sync when app is terminated:** Per scope.
 
-## 9. AI Tools Disclosure
+---
+
+## 8. AI Tools Disclosure
 AI coding assistance was used to scaffold boilerplate, structure tests, and draft documentation. All architecture decisions, state/sync logic, and tests were reviewed and verified.
