@@ -17,7 +17,7 @@ Future<void> main() async {
       overrides: [
         databaseProvider.overrideWithValue(database),
       ],
-      child: const RebsWorkspaceApp(),
+      child: const EmployeeWorkspaceApp(),
     ),
   );
 }

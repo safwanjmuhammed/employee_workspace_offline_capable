@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'feature/presentation/home_shell.dart';
 
-class RebsWorkspaceApp extends StatelessWidget {
-  const RebsWorkspaceApp({super.key});
+class EmployeeWorkspaceApp extends StatelessWidget {
+  const EmployeeWorkspaceApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'REBS HRMS',
+      title: 'Employee Workspace',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
