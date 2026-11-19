@@ -8,16 +8,17 @@ import '../datasources/outbox_store.dart';
 
 class AttendanceRepositoryImpl implements AttendanceRepository {
   AttendanceRepositoryImpl({
-    required this.cache,
-    required this.outbox,
-  });
+    required CacheStore cache,
+    required OutboxStore outbox,
+  }) : _cache = cache,
+       _outbox = outbox;
 
-  final CacheStore cache;
-  final OutboxStore outbox;
+  final CacheStore _cache;
+  final OutboxStore _outbox;
 
   @override
   Future<OfficeConfig> getOfficeConfig() async {
-    final cachedEmployee = await cache.readEmployee();
+    final cachedEmployee = await _cache.readEmployee();
     return cachedEmployee?.value.office ??
         const OfficeConfig(
           name: 'Office',
@@ -29,8 +30,8 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
 
   @override
   Future<TodayAttendanceStatus> getTodayStatus(String workDate) async {
-    final cachedHistory = await cache.readAttendanceHistory();
-    final outboxEvents = await outbox.getAllEvents();
+    final cachedHistory = await _cache.readAttendanceHistory();
+    final outboxEvents = await _outbox.getAllEvents();
     final merged = AttendanceRules.mergeHistoryWithOutbox(
       serverRecords: cachedHistory?.value ?? const [],
       outboxEvents: outboxEvents,
@@ -41,6 +42,6 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
 
   @override
   Future<AttendanceEvent> enqueueEvent(AttendanceEvent event) {
-    return outbox.enqueue(event);
+    return _outbox.enqueue(event);
   }
 }
