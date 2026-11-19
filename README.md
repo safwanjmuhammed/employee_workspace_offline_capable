@@ -135,24 +135,23 @@ Tap the **tune icon** (top-right of the AppBar) to open **Simulation & Testing C
 
 ---
 
-## 6. Assumptions, Limitations & Trade-offs
+## 6. Completed Features
 
-- **Stateless nginx mock (Option A):** `mock_api/nginx` serves static JSON fixtures and uses `X-Mock-Scenario` for fault injection. Because plain nginx is stateless, `POST`ed check-ins/leaves are not persisted on the server across `GET` refreshes; instead, the Flutter app merges cached server history with the local SQLite outbox (`AttendanceRules.mergeHistoryWithOutbox`) and updates the local leave cache on submission. Idempotency replay (`accept_then_timeout` -> `200 replayed: true`) is thoroughly verified in `test/attendance_idempotency_test.dart` using a stateful Dio `HttpClientAdapter`.
-- **Single employee & no login:** Per assignment scope.
-- **No background sync when app is terminated:** Per assignment scope.
-- **Estimated time spent:** ~6.5 hours.
-
----
-
-## 7. Demo Video Script (3–5 min)
-1. **Dashboard loading:** Launch app with nginx running -> show loading indicator, then employee profile, today's status, leave balance, and latest 5 records.
-2. **Online check-in:** Open Simulation & Testing Controls -> set Location to *Inside Office* -> tap **Check In** -> show `Synced` status and live elapsed timer.
-3. **Offline attendance action:** Enable *Simulate Offline* -> tap **Check Out** -> show `Pending Sync` chip and top sync bar (`1 pending sync`).
-4. **App restart:** Force-close and reopen the app -> show `Pending Sync` check-out is preserved from SQLite.
-5. **Sync after reconnecting:** Disable *Simulate Offline* -> show automatic sync (or tap **Sync Now**) -> event transitions to `Synced`.
-6. **Leave validation & submission:** Open Leave tab -> trigger local validation (short reason / overlapping date) -> submit valid leave -> optionally switch scenario to `leave_reject` to demonstrate server 422 inline error handling.
+- **Employee Dashboard:** Displays employee name, ID, department, company timezone, today's attendance status (`Not Checked In`, `Checked In`, `Checked Out`), check-in/check-out times, live elapsed working duration, latest 5 attendance records, and distinct loading, error (with retry), empty, and offline states.
+- **Geofenced Attendance Check-In & Check-Out:** Enforces once-per-day check-in, check-out only after check-in, re-entry + DB unique-index duplicate guards, 200 m Haversine geofence check, configurable company timezone (`COMPANY_TZ`), and handling for denied, permanently denied, disabled, and unavailable GPS states.
+- **Offline Storage & Ordered Synchronization:** Persists cached API data (`cache_kv`) and queued events (`attendance_outbox`) in SQLite (`sqflite`); preserves pending events across app restarts; distinguishes `Pending Sync`, `Synced`, and `Rejected` states; supports manual **Sync Now** and automatic sync on reconnect; processes events strictly in `seq ASC` order; halts on transient errors; and sends a persistent UUID v4 `Idempotency-Key` on every retry.
+- **Simulation & Testing Controls:** In-app panel for simulating offline mode, GPS/permission states, `X-Mock-Scenario` fault injection (`slow`, `timeout`, `server_error`, `duplicate_attendance`, `attendance_rejected`, `replay`), runtime base URL override, and local data reset.
+- **Mock API & Postman Collection:** Stateless `nginx` mock server (`mock_api/nginx/`) with scenario-based fault injection and a ready-to-import Postman collection (`mock_api/employee_workspace_postman_collection.json`).
+- **Automated Tests:** Unit, persistence, idempotency, and widget tests covering attendance rules, timeout + idempotent retry, SQLite restart persistence & ordering, `409` conflict rejection, and dashboard loading/pending-sync UI states.
 
 ---
 
-## 8. AI Tools Disclosure
+## 7. Assumptions, Limitations & Trade-offs
+
+- **Minimal UI / Future Design System Extraction:** This phase intentionally prioritizes offline-first architecture, ordered synchronization, and idempotency over visual polish. The presentation layer uses standard Material 3 widgets directly and will be extracted into a dedicated design system (tokens, typography, and reusable components) in a later phase.
+- **Stateless nginx mock (Option A):** `mock_api/nginx` serves static JSON fixtures and uses `X-Mock-Scenario` for fault injection. Because plain nginx is stateless, `POST`ed check-ins/check-outs are not persisted on the server across `GET` refreshes; instead, the Flutter app merges cached server history with the local SQLite outbox (`AttendanceRules.mergeHistoryWithOutbox`). Idempotency replay (`accept_then_timeout` -> `200 replayed: true`) is thoroughly verified in `test/attendance_idempotency_test.dart` using a stateful Dio `HttpClientAdapter`.
+- **Single employee & no login:** Per scope.
+- **No background sync when app is terminated:** Per scope.
+
+## 9. AI Tools Disclosure
 AI coding assistance was used to scaffold boilerplate, structure tests, and draft documentation. All architecture decisions, state/sync logic, and tests were reviewed and verified.
