@@ -1,0 +1,16 @@
+{
+  "id": "EMP-1024",
+  "name": "Jacob mathew",
+  "department": "Engineering",
+  "designation": "Software Engineer",
+  "company": {
+    "name": "Test organization",
+    "timezone": "Asia/Kolkata"
+  },
+  "office": {
+    "name": "Test office",
+    "latitude": 10.0101,
+    "longitude": 76.3637,
+    "radiusMeters": 200
+  }
+}
