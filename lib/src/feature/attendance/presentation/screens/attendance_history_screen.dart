@@ -117,10 +117,13 @@ class _OutboxList extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '${ev.type.label} (${ev.workDate})',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        '${ev.type.label} (${ev.workDate})',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     StatusChip.sync(ev.syncStatus),
                   ],
                 ),

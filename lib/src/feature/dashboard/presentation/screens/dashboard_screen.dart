@@ -317,10 +317,13 @@ class _TodayAttendanceCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Today's Attendance",
-                  style: Theme.of(context).textTheme.titleMedium,
+                Expanded(
+                  child: Text(
+                    "Today's Attendance",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 ),
+                const SizedBox(width: 8),
                 StatusChip.today(todayStatus),
               ],
             ),
@@ -328,25 +331,24 @@ class _TodayAttendanceCard extends StatelessWidget {
             const SizedBox(height: 14),
             // Check-in and Check-out columns
             Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  flex: 2,
                   child: _MetricColumn(
                     label: 'Check-In',
                     value: _formatTime(todayRecord?.checkInAtUtc),
                     syncStatus: todayRecord?.checkInSyncStatus,
                   ),
                 ),
+                const SizedBox(width: 8),
                 Expanded(
-                  flex: 2,
                   child: _MetricColumn(
                     label: 'Check-Out',
                     value: _formatTime(todayRecord?.checkOutAtUtc),
                     syncStatus: todayRecord?.checkOutSyncStatus,
                   ),
                 ),
+                const SizedBox(width: 8),
                 Expanded(
                   child: _MetricColumn(
                     label: 'Elapsed',
@@ -430,7 +432,11 @@ class _MetricColumn extends StatelessWidget {
         ),
         if (syncStatus != null) ...[
           const SizedBox(height: 4),
-          StatusChip.sync(syncStatus!),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: StatusChip.sync(syncStatus!),
+          ),
         ],
       ],
     );
