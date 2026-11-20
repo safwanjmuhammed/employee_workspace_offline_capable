@@ -312,7 +312,6 @@ class _TodayAttendanceCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Today's Attendance title and status chip
             Row(
@@ -329,6 +328,7 @@ class _TodayAttendanceCard extends StatelessWidget {
             const SizedBox(height: 14),
             // Check-in and Check-out columns
             Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
