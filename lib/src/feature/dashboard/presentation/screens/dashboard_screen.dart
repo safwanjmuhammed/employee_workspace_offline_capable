@@ -13,10 +13,7 @@ import '../../domain/models/dashboard_snapshot.dart';
 import '../providers/workspace_providers.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
-  const DashboardScreen({
-    super.key,
-    required this.onOpenHistory,
-  });
+  const DashboardScreen({super.key, required this.onOpenHistory});
 
   final VoidCallback onOpenHistory;
 
@@ -248,23 +245,20 @@ class _EmployeeHeaderCard extends StatelessWidget {
                 children: [
                   Text(
                     emp.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     '${emp.id} • ${emp.department}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey.shade700,
-                        ),
+                    style: Theme.of(context).textTheme.bodyMedium
+                        ?.copyWith(color: Colors.grey.shade700),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     '${emp.office.name} (${emp.companyTimezone})',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade600,
-                        ),
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: Colors.grey.shade600),
                   ),
                 ],
               ),
@@ -317,6 +311,7 @@ class _TodayAttendanceCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Wrap(
@@ -333,9 +328,12 @@ class _TodayAttendanceCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 14),
+            // Check-in and Check-out columns
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
+                  flex: 2,
                   child: _MetricColumn(
                     label: 'Check-In',
                     value: _formatTime(todayRecord?.checkInAtUtc),
@@ -343,6 +341,7 @@ class _TodayAttendanceCard extends StatelessWidget {
                   ),
                 ),
                 Expanded(
+                  flex: 2,
                   child: _MetricColumn(
                     label: 'Check-Out',
                     value: _formatTime(todayRecord?.checkOutAtUtc),
@@ -350,6 +349,7 @@ class _TodayAttendanceCard extends StatelessWidget {
                   ),
                 ),
                 Expanded(
+                  flex: 1,
                   child: _MetricColumn(
                     label: 'Elapsed',
                     value: _formatDuration(elapsed),
@@ -358,16 +358,17 @@ class _TodayAttendanceCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
+            // Attendance toggle button
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
                 onPressed: actionBusy
                     ? null
                     : canCheckIn
-                        ? onCheckIn
-                        : canCheckOut
-                            ? onCheckOut
-                            : null,
+                    ? onCheckIn
+                    : canCheckOut
+                    ? onCheckOut
+                    : null,
                 icon: actionBusy
                     ? const SizedBox(
                         width: 18,
@@ -381,15 +382,15 @@ class _TodayAttendanceCard extends StatelessWidget {
                         canCheckIn
                             ? Icons.login
                             : canCheckOut
-                                ? Icons.logout
-                                : Icons.check_circle,
+                            ? Icons.logout
+                            : Icons.check_circle,
                       ),
                 label: Text(
                   canCheckIn
                       ? 'Check In'
                       : canCheckOut
-                          ? 'Check Out'
-                          : 'Completed for Today',
+                      ? 'Check Out'
+                      : 'Completed for Today',
                 ),
               ),
             ),
@@ -417,17 +418,17 @@ class _MetricColumn extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey.shade600,
-              ),
+          style: Theme.of(context).textTheme.bodySmall
+              ?.copyWith(color: Colors.grey.shade600),
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(context).textTheme.titleSmall
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         if (syncStatus != null) ...[
           const SizedBox(height: 4),

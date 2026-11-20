@@ -76,20 +76,20 @@ class AttendanceEvent implements SyncableEvent {
   final DateTime createdAtUtc;
 
   Map<String, dynamic> toDbMap() => {
-        if (seq != null) 'seq': seq,
-        'event_id': eventId,
-        'type': type.wireValue,
-        'work_date': workDate,
-        'occurred_at_utc': occurredAtUtc.toUtc().toIso8601String(),
-        'latitude': latitude,
-        'longitude': longitude,
-        'accuracy_meters': accuracyMeters,
-        'sync_status': syncStatus.wireValue,
-        'reject_reason': rejectReason,
-        'attempts': attempts,
-        'last_error': lastError,
-        'created_at_utc': createdAtUtc.toUtc().toIso8601String(),
-      };
+    if (seq != null) 'seq': seq,
+    'event_id': eventId,
+    'type': type.wireValue,
+    'work_date': workDate,
+    'occurred_at_utc': occurredAtUtc.toUtc().toIso8601String(),
+    'latitude': latitude,
+    'longitude': longitude,
+    'accuracy_meters': accuracyMeters,
+    'sync_status': syncStatus.wireValue,
+    'reject_reason': rejectReason,
+    'attempts': attempts,
+    'last_error': lastError,
+    'created_at_utc': createdAtUtc.toUtc().toIso8601String(),
+  };
 
   factory AttendanceEvent.fromDbMap(Map<String, dynamic> map) {
     return AttendanceEvent(
@@ -110,16 +110,16 @@ class AttendanceEvent implements SyncableEvent {
   }
 
   Map<String, dynamic> toApiJson() => {
-        'eventId': eventId,
-        'type': type.wireValue,
-        'workDate': workDate,
-        'occurredAt': occurredAtUtc.toUtc().toIso8601String(),
-        'location': {
-          'latitude': latitude,
-          'longitude': longitude,
-          'accuracyMeters': accuracyMeters,
-        },
-      };
+    'eventId': eventId,
+    'type': type.wireValue,
+    'workDate': workDate,
+    'occurredAt': occurredAtUtc.toUtc().toIso8601String(),
+    'location': {
+      'latitude': latitude,
+      'longitude': longitude,
+      'accuracyMeters': accuracyMeters,
+    },
+  };
 }
 
 /// Merged attendance day record combining server history and local outbox events.
@@ -168,8 +168,8 @@ class AttendanceRecord {
   }
 
   Map<String, dynamic> toJson() => {
-        'date': date,
-        'checkInAt': checkInAtUtc?.toUtc().toIso8601String(),
-        'checkOutAt': checkOutAtUtc?.toUtc().toIso8601String(),
-      };
+    'date': date,
+    'checkInAt': checkInAtUtc?.toUtc().toIso8601String(),
+    'checkOutAt': checkOutAtUtc?.toUtc().toIso8601String(),
+  };
 }

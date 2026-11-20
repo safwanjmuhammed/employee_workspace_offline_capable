@@ -54,11 +54,8 @@ class OutboxStore implements SyncOutbox<AttendanceEvent> {
   }
 
   Future<List<AttendanceEvent>> getAllEvents() async {
-    final rows = await _db.db.query(
-      'attendance_outbox',
-      orderBy: 'seq DESC',
-    );
-    return rows.map(AttendanceEvent.fromDbMap).toList();
+    final rows = await _db.db.query('attendance_outbox', orderBy: 'seq DESC');
+    return rows.map((e) => AttendanceEvent.fromDbMap(e)).toList();
   }
 
   @override
@@ -74,10 +71,7 @@ class OutboxStore implements SyncOutbox<AttendanceEvent> {
   Future<void> markSynced(String eventId) async {
     await _db.db.update(
       'attendance_outbox',
-      {
-        'sync_status': SyncStatus.synced.wireValue,
-        'last_error': null,
-      },
+      {'sync_status': SyncStatus.synced.wireValue, 'last_error': null},
       where: 'event_id = ?',
       whereArgs: [eventId],
     );
