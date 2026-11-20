@@ -314,11 +314,9 @@ class _TodayAttendanceCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Wrap(
-              spacing: 8,
-              runSpacing: 6,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              alignment: WrapAlignment.spaceBetween,
+            // Today's Attendance title and status chip
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Today's Attendance",
@@ -327,6 +325,7 @@ class _TodayAttendanceCard extends StatelessWidget {
                 StatusChip.today(todayStatus),
               ],
             ),
+
             const SizedBox(height: 14),
             // Check-in and Check-out columns
             Row(
@@ -349,7 +348,6 @@ class _TodayAttendanceCard extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 1,
                   child: _MetricColumn(
                     label: 'Elapsed',
                     value: _formatDuration(elapsed),
